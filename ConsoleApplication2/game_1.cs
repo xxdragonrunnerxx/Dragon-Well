@@ -11,7 +11,8 @@ namespace Game_I
     {
         static void Main(string[] args)
         {
-            Console.SetWindowSize(200, 60);
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(Console.LargestWindowWidth - 5, Console.LargestWindowHeight - 5);
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine(@"                                         ,   ,  ");
             Console.WriteLine(@"                                         $,  $,     ,");

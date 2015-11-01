@@ -11,7 +11,7 @@ namespace Game_I
         private tile[,] gameBoard;
         public int length;
         public int width;
-        public static int rooms = 10;
+        public static int rooms = 15;
         public int counts = 0;
         public int[,] Center = new int[rooms,2];
         public board(int x, int y,bool wilderness)
@@ -39,8 +39,7 @@ namespace Game_I
             if (wilderness)
             {
                 createWilderness(20);
-                setStairs();
-                setPlayer();
+                exit();
             }
             else
             {
@@ -172,11 +171,71 @@ namespace Game_I
                 }
             }
         }
+        private void exit()
+        {
+            for (int a = 0; a < 1; a++)
+            {
+                int x = Center[a, 0];
+                int y = Center[a, 1];
+                int i = Center[a + 1, 0];
+                int j = Center[a + 1, 1];
+                if (x >= i && y >= j)
+                {
+                    for (int down = i; down <= x; down++)
+                    {
+                        setWildernessFloor(down, j);
+                    }
+                    for (int right = j; right <= y; right++)
+                    {
+                        setWildernessFloor(x, right);
+                    }
+                }
+                else if (x >= i)
+                {
+                    for (int down = i; down <= x; down++)
+                    {
+                        setWildernessFloor(down, j);
+                    }
+                    for (int left = y; left <= j; left++)
+                    {
+                        setWildernessFloor(x, left);
+                    }
+                }
+                else if (y >= j)
+                {
+                    for (int up = x; up <= i; up++)
+                    {
+                        setWildernessFloor(up, j);
+                    }
+                    for (int right = j; right <= y; right++)
+                    {
+                        setWildernessFloor(x, right);
+                    }
+                }
+                else
+                {
+                    for (int up = x; up <= i; up++)
+                    {
+                        setWildernessFloor(up, j);
+                    }
+                    for (int left = y; left <= j; left++)
+                    {
+                        setWildernessFloor(x, left);
+                    }
+                }
+            }
+        }
         private void setFloor(int x,int y)
         {
             gameBoard[x, y].symbol = "`";
             gameBoard[x, y].ForegroundColor = ConsoleColor.Blue;
             gameBoard[x, y].BackgroundColor = ConsoleColor.Green;
+        }
+        private void setWildernessFloor(int x, int y)
+        {
+            gameBoard[x, y].symbol = ".";
+            gameBoard[x, y].ForegroundColor = ConsoleColor.Blue;
+            gameBoard[x, y].BackgroundColor = ConsoleColor.DarkGreen;
         }
         private bool checkRoom(int l, int w, int x, int y)
         {
@@ -232,6 +291,8 @@ namespace Game_I
                     }
                 }
             }
+            setStairs();
+            setPlayer();
         }
         private void setStairs()
         {
@@ -240,6 +301,8 @@ namespace Game_I
             if (string.Compare(gameBoard[x, y].symbol, "#") != 0)
             {
                 gameBoard[x, y].stairsHere = true;
+                Center[0, 0] = x;
+                Center[0, 1] = y;
             }
             else
                 setStairs();
@@ -253,6 +316,8 @@ namespace Game_I
                 if (string.Compare(gameBoard[x, y].symbol, ">") != 0)
                 {
                     gameBoard[x, y].playerHere = true;
+                    Center[1, 0] = x;
+                    Center[1, 1] = y;
                 }
                 else
                     setPlayer();
@@ -263,7 +328,7 @@ namespace Game_I
         private bool checkOddRoom(int s,int o, int x, int y)
         {
             int y1 = y;
-            if (o < 40)
+            if (o < 35)
             {
                 for (int a = 0; a <= s; a++)
                 {
